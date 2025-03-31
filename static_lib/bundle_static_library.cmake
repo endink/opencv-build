@@ -99,6 +99,7 @@ function(bundle_static_library bundled_target_name)
         foreach(static_lib IN LISTS static_libs)
             file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/${bundled_target_name}.ar.in
                 "ADDLIB ${static_lib}\n")
+            message("append static lib: ${static_lib}")
         endforeach()
 
         file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/${bundled_target_name}.ar.in "SAVE\n")
