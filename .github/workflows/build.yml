@@ -1,0 +1,185 @@
+name: Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      opencv-version:
+        description: "OpenCV Version"
+        type: string
+        default: 4.11.0
+      target:
+        description: "Build Target"
+        default: all
+        type: choice
+        options:
+        - win-x64-static-md
+        - win-x64-static-mt
+        - all
+      
+  push:
+    tags:
+      - v*.*.*
+
+env:
+  GCC_VERSION: 11
+  CMAKE_VERSION: 3.26
+  PYTHON_VERSION: 3.9
+  NODE_VERSION: 20
+  XCODE_VERSION: 14.2
+  MACOSX_DEPLOYMENT_TARGET: 10.15
+  BUILD_TARGET: ${{ inputs.target || 'all' }}
+  WIN_SDK_VERSION: 10.0.22621.0
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    name: Build
+    runs-on: ${{ matrix.runs-on }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # - target: linux-aarch64-static_lib
+          #   runs-on: buildjet-4vcpu-ubuntu-2204-arm
+          #   build: >
+          #     PARALLEL_JOB_COUNT=2
+          #     ./build-static_lib.sh
+          #   post-build: tar -czvf $ARCHIVE_DIR/$ARCHIVE_NAME.tgz -C $OUTPUT_DIR .
+
+          # - target: linux-x64-static_lib
+          #   runs-on: ubuntu-22.04
+          #   build: ./build-static_lib.sh
+          #   post-build: tar -czvf $ARCHIVE_DIR/$ARCHIVE_NAME.tgz -C $OUTPUT_DIR .
+
+          # - target: osx-arm64-static_lib
+          #   runs-on: macos-13-xlarge
+          #   build: ./build-static_lib.sh
+          #   post-build: tar -czvf $ARCHIVE_DIR/$ARCHIVE_NAME.tgz -C $OUTPUT_DIR .
+
+          # - target: osx-universal2-static_lib
+          #   runs-on: macos-13-xlarge
+          #   build: >
+          #     CMAKE_OPTIONS="-D CMAKE_OSX_ARCHITECTURES=arm64;x86_64"
+          #     ./build-static_lib.sh
+          #   post-build: tar -czvf $ARCHIVE_DIR/$ARCHIVE_NAME.tgz -C $OUTPUT_DIR .
+
+          # - target: osx-x86_64-static_lib
+          #   runs-on: macos-13
+          #   build: ./build-static_lib.sh
+          #   post-build: tar -czvf $ARCHIVE_DIR/$ARCHIVE_NAME.tgz -C $OUTPUT_DIR .
+
+          - target: win-x64-static-md
+            runs-on: windows-2019
+            build: >
+              CMAKE_OPTIONS='-A x64 -DUSE_MSVC_STATIC_RUNTIME=OFF '
+              ./build-static_lib.sh
+            post-build: 7z a $ARCHIVE_DIR/$ARCHIVE_NAME.zip $OUTPUT_DIR/*
+
+          - target: win-x64-static-mt
+            runs-on: windows-2019
+            build: >
+              CMAKE_OPTIONS='-A x64 -DUSE_MSVC_STATIC_RUNTIME=ON '
+              ./build-static_lib.sh
+            post-build: 7z a $ARCHIVE_DIR/$ARCHIVE_NAME.zip $OUTPUT_DIR/*
+
+          # - target: wasm-static_lib-simd-threaded
+          #   runs-on: ubuntu-22.04
+          #   build: ./build-wasm-static_lib.sh
+          #   post-build: tar -czvf $ARCHIVE_DIR/$ARCHIVE_NAME.tgz -C $OUTPUT_DIR .
+
+    steps:
+      - name: Set OpenCV version
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            echo "OPENCV_VERSION=${GITHUB_REF_NAME}" >> $GITHUB_ENV
+            echo "Use OpenCV Version: ${GITHUB_REF_NAME}"
+          else
+            echo "OPENCV_VERSION=${{ inputs.opencv-version }}" >> $GITHUB_ENV
+            echo "Use OpenCV Version: ${{ inputs.opencv-version }}"
+          fi
+      
+      - name: Set environment variables
+        run: |
+          echo OUTPUT_DIR=./output >> $GITHUB_ENV
+          echo ARCHIVE_DIR="${{ runner.temp }}" >> $GITHUB_ENV
+          echo ARCHIVE_NAME=opencv-${{ matrix.target }}-${{ env.OPENCV_VERSION }} >> $GITHUB_ENV
+
+      - name: Checkout
+        if: ${{ env.BUILD_TARGET == 'all' || env.BUILD_TARGET == matrix.target }}
+        uses: actions/checkout@v4
+
+      - name: Checkout OpenCV v${{ env.OPENCV_VERSION }}
+        if: ${{ env.BUILD_TARGET == 'all' || env.BUILD_TARGET == matrix.target }}
+        uses: actions/checkout@v4
+        with:
+          repository: opencv/opencv
+          submodules: true
+          ref: ${{ env.OPENCV_VERSION }}
+          path: opencv
+
+      # - name: Setup MSBuild
+      #   if: runner.os == 'Windows'
+      #   uses: TheMrMilchmann/setup-msvc-dev@v3
+      #   with:
+      #     sdk: 10.0.22621.0
+      #     toolset: 14.38.33130
+      #     arch: x64
+
+      - name: Setup GCC
+        if: runner.os == 'Linux'
+        uses: egor-tensin/setup-gcc@v1
+        with:
+          version: ${{ env.GCC_VERSION }}
+
+      - name: Setup CMake
+        uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: ${{ env.CMAKE_VERSION }}
+
+      - name: Setup Xcode
+        if: runner.os == 'macOS'
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: ${{ env.XCODE_VERSION }}
+
+      - name: Build
+        if: ${{ env.BUILD_TARGET == 'all' || env.BUILD_TARGET == matrix.target }}
+        run: ${{ matrix.build }}
+
+      - name: Post build
+        if: ${{ env.BUILD_TARGET == 'all' || env.BUILD_TARGET == matrix.target }}
+        run: ${{ matrix.post-build }}
+
+      - name: Upload artifact
+        if: ${{ env.BUILD_TARGET == 'all' || env.BUILD_TARGET == matrix.target }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ARCHIVE_NAME }}
+          path: ${{ env.ARCHIVE_DIR }}/${{ env.ARCHIVE_NAME }}.*
+
+  release:
+    name: Release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Release
+        uses: ncipollo/release-action@v1
+        with:
+          omitName: true
+          body: "Official Release: [OpenCV ${{ github.ref_name }}](https://github.com/opencv/opencv/releases/tag/${{ github.ref_name }})"
+          artifacts: "*/*.*"
+          allowUpdates: true
+          omitNameDuringUpdate: true
+          omitBodyDuringUpdate: true
+          omitPrereleaseDuringUpdate: true
+          omitDraftDuringUpdate: false
