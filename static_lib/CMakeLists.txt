@@ -23,9 +23,38 @@ set(WITH_VTK OFF)
 SET(BUILD_ZLIB OFF)
 set(WITH_ONNX OFF)
 set(WITH_DNN OFF)
+set(WITH_GSTREAMER OFF)
+set(WITH_ITT OFF)
 set(OPENCV_INCLUDE_INSTALL_PATH "${CMAKE_INSTALL_PREFIX}/include")
 # Suppress C++23 deprecation warnings
 add_compile_definitions(_SILENCE_ALL_CXX23_DEPRECATION_WARNINGS)
+
+if(MSVC)
+    if(USE_MSVC_STATIC_RUNTIME)
+        message("------------------ Use Static MSVC CRT ------------------")
+        set(BUILD_WITH_STATIC_CRT ON)
+        set(CMAKE_MSVC_RUNTIME_LIBRARY MultiThreaded)
+
+        add_compile_options(
+          $<$<CONFIG:>:/MT> #---------|
+          $<$<CONFIG:Debug>:/MTd> #---|-- Statically link the runtime libraries
+          $<$<CONFIG:Release>:/MT> #--|
+          $<$<CONFIG:RelWithDebInfo>:/MT>
+          $<$<CONFIG:MinSizeRel>:/MT>
+        )
+    else()
+    message("------------------ Use Dynamic MSVC CRT ------------------")
+        set(CMAKE_MSVC_RUNTIME_LIBRARY MultiThreadedDLL)
+        set(BUILD_WITH_STATIC_CRT OFF)
+        add_compile_options(
+          $<$<CONFIG:>:/MD> #---------|
+          $<$<CONFIG:Debug>:/MDd> #---|-- Statically link the runtime libraries
+          $<$<CONFIG:Release>:/MD> #--|
+          $<$<CONFIG:RelWithDebInfo>:/MD>
+          $<$<CONFIG:MinSizeRel>:/MD>
+        )
+    endif()
+endif()
 
 # Add source
 add_subdirectory(${OPENCV_SOURCE_DIR} opencv)
