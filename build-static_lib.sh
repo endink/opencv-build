@@ -1,5 +1,6 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
+set -e
 SOURCE_DIR=${SOURCE_DIR:=static_lib}
 BUILD_DIR=${BUILD_DIR:=build/static_lib}
 OUTPUT_DIR=${OUTPUT_DIR:=output/static_lib}
