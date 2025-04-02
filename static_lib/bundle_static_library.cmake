@@ -65,7 +65,7 @@ function(bundle_static_library bundled_target_name)
     list(REMOVE_DUPLICATES static_libs)
     set(static_libs ${static_libs} PARENT_SCOPE)
     
-    message("bundle static libs: ${static_libs}")
+    message(STATUS "bundle static libs: ${static_libs}")
 
     file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/static_libs.txt.in)
 
