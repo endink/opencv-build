@@ -3,6 +3,8 @@ project(opencv_static_lib)
 
 
 option(USE_MSVC_STATIC_RUNTIME "Use static crt or not" OFF)
+option(BUILD_BUNDLE "bundle static libs" ON)
+
 set(BUILD_SHARED_LIBS OFF)
 set(BUILD_TESTS OFF)
 set(BUILD_PERF_TESTS OFF)
@@ -18,6 +20,19 @@ set(BUILD_opencv_dnn OFF)
 set(BUILD_opencv_highgui OFF)
 set(BUILD_opencv_java_bindings_generator OFF)
 set(BUILD_opencv_python_bindings_generator OFF)
+set(BUILD_java_bindings_gen OFF)
+set(BUILD_opencv_photo OFF)
+set(BUILD_opencv_stitching OFF)
+set(BUILD_opencv_ts OFF)
+set(BUILD_opencv_ml OFF)
+set(BUILD_opencv_videostab OFF)
+set(BUILD_opencv_video OFF)
+#set(BUILD_gapi OFF)
+set(BUILD_opencv_python3 OFF)
+set(BUILD_opencv_python2 OFF)
+set(BUILD_opencv_face OFF)
+set(BUILD_opencv_js OFF)
+set(BUILD_opencv_objdetect OFF)
 set(WITH_WIN32UI OFF)
 set(WITH_QT OFF)
 set(WITH_GTK OFF)
@@ -28,6 +43,10 @@ set(WITH_ONNX OFF)
 set(WITH_DNN OFF)
 set(WITH_GSTREAMER OFF)
 set(WITH_ITT OFF)
+set(WITH_PROTOBUF OFF)
+set(WITH_CUDA OFF)
+
+
 set(OPENCV_INCLUDE_INSTALL_PATH "${CMAKE_INSTALL_PREFIX}/include")
 # Suppress C++23 deprecation warnings
 add_compile_definitions(_SILENCE_ALL_CXX23_DEPRECATION_WARNINGS)
@@ -62,6 +81,7 @@ endif()
 # Add source
 add_subdirectory(${OPENCV_SOURCE_DIR} opencv)
 
+
 # Bundle the static library
 include(bundle_static_library.cmake)
 bundle_static_library(${PROJECT_NAME} opencv_world)
@@ -72,9 +92,10 @@ bundle_static_library(${PROJECT_NAME} opencv_world)
 #    FILES $<TARGET_PROPERTY:opencv_world,OPENCV_INCLUDE_INSTALL_PATH>
 #    TYPE INCLUDE
 #)
-
-install(
-    FILES ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}${PROJECT_NAME}${CMAKE_STATIC_LIBRARY_SUFFIX}
-    RENAME ${CMAKE_STATIC_LIBRARY_PREFIX}opencv_world${CMAKE_STATIC_LIBRARY_SUFFIX}
-    TYPE LIB
-)
+if(BUILD_BUNDLE)
+    install(
+        FILES ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}${PROJECT_NAME}${CMAKE_STATIC_LIBRARY_SUFFIX}
+        RENAME ${CMAKE_STATIC_LIBRARY_PREFIX}opencv_bundled${CMAKE_STATIC_LIBRARY_SUFFIX}
+        TYPE LIB
+    )
+endif

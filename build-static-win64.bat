@@ -19,9 +19,6 @@ set "BUILD_DIR=build/static_lib"
 set "OUTPUT_DIR=output/static_lib"
 set "OPENCV_SOURCE_DIR=%SCRIPT_DIR%/opencv"
 
-SET "CMAKE_OPTIONS=-DBUILD_opencv_python3=OFF -DBUILD_opencv_python2=OFF -DBUILD_opencv_python_bindings_generator=OFF -DBUILD_java_bindings_gen=OFF -DBUILD_gapi=OFF -DWITH_PROTOBUF=OFF -DWITH_CUDA=OFF -DBUILD_opencv_face=OFF -DBUILD_opencv_js=OFF -DBUILD_opencv_objdetect=OFF "
-@rem set "CMAKE_OPTIONS=-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$<$<CONFIG:Debug>:Debug>DLL -DONNX_USE_MSVC_STATIC_RUNTIME=OFF -Dprotobuf_MSVC_STATIC_RUNTIME=OFF -Dgtest_force_shared_crt=ON -Donnxruntime_BUILD_UNIT_TESTS=OFF "
-
 if not exist "%OPENCV_SOURCE_DIR%" (
 
     @echo "Clone opencv (%OPENCV_VERSION%) ..."

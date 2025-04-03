@@ -9,18 +9,6 @@ OPENCV_VERSION=${OPENCV_VERSION:=4.11.0}
 CMAKE_OPTIONS=$CMAKE_OPTIONS
 CMAKE_BUILD_OPTIONS=$CMAKE_BUILD_OPTIONS
 
-DEFAULT_OPTIONS="
--DBUILD_opencv_python3=OFF \
--DBUILD_opencv_python2=OFF \
--DBUILD_opencv_python_bindings_generator=OFF \
--DBUILD_java_bindings_gen=OFF \
--DBUILD_gapi=OFF \
--DWITH_PROTOBUF=OFF \
--DWITH_CUDA=OFF \
--DBUILD_opencv_face=OFF \
--DBUILD_opencv_js=OFF \
--DBUILD_opencv_objdetect=OFF "
-
 echo "CMAKE_OPTIONS: $CMAKE_OPTIONS"
 
 case $(uname -s) in
@@ -44,7 +32,6 @@ cmake \
     -D CMAKE_INSTALL_PREFIX=$OUTPUT_DIR \
     -D OPENCV_SOURCE_DIR=$(pwd)/$OPENCV_SOURCE_DIR \
     --compile-no-warning-as-error \
-    $DEFAULT_OPTIONS \
     $CMAKE_OPTIONS
 
 cmake \
