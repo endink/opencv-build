@@ -14,9 +14,9 @@ set "OUTPUT_DIR=%SCRIPT_DIR%/output"
 set "ARCHIVE_DIR=%OUTPUT_DIR%/archive"
 set "ARCHIVE_NAME=opencv-win64-%OPENCV_VERSION%"
 
-set "SOURCE_DIR=%SCRIPT_DIR%/static_lib"
-set "BUILD_DIR=build/static_lib"
-set "OUTPUT_DIR=output/static_lib"
+set "SOURCE_DIR=%SCRIPT_DIR:\=/%/static_lib"
+set "BUILD_DIR=%SCRIPT_DIR:\=/%/build"
+set "OUTPUT_DIR=%SCRIPT_DIR:\=/%/output/win64"
 set "OPENCV_SOURCE_DIR=%SCRIPT_DIR%/opencv"
 
 if not exist "%OPENCV_SOURCE_DIR%" (
@@ -25,6 +25,10 @@ if not exist "%OPENCV_SOURCE_DIR%" (
 
     git clone -b %OPENCV_VERSION% --depth=1 --recursive https://github.com/opencv/opencv.git || goto failed
 
+)
+
+if "%CMAKE_OPTIONS%"=="" (
+set "CMAKE_OPTIONS=-DBUNDLE_LIB=ON"
 )
 
 @echo on

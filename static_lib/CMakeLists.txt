@@ -3,7 +3,7 @@ project(opencv_static_lib)
 
 
 option(USE_MSVC_STATIC_RUNTIME "Use static crt or not" OFF)
-option(BUILD_BUNDLE "bundle static libs" ON)
+option(BUNDLE_LIB "bundle static libs" ON)
 
 set(BUILD_SHARED_LIBS OFF)
 set(BUILD_TESTS OFF)
@@ -47,7 +47,7 @@ set(WITH_PROTOBUF OFF)
 set(WITH_CUDA OFF)
 
 
-set(OPENCV_INCLUDE_INSTALL_PATH "${CMAKE_INSTALL_PREFIX}/include")
+#set(OPENCV_INCLUDE_INSTALL_PATH "${CMAKE_INSTALL_PREFIX}/include")
 # Suppress C++23 deprecation warnings
 add_compile_definitions(_SILENCE_ALL_CXX23_DEPRECATION_WARNINGS)
 
@@ -92,10 +92,10 @@ bundle_static_library(${PROJECT_NAME} opencv_world)
 #    FILES $<TARGET_PROPERTY:opencv_world,OPENCV_INCLUDE_INSTALL_PATH>
 #    TYPE INCLUDE
 #)
-if(BUILD_BUNDLE)
+if(BUNDLE_LIB)
     install(
         FILES ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}${PROJECT_NAME}${CMAKE_STATIC_LIBRARY_SUFFIX}
         RENAME ${CMAKE_STATIC_LIBRARY_PREFIX}opencv_bundled${CMAKE_STATIC_LIBRARY_SUFFIX}
         TYPE LIB
     )
-endif
+endif()
