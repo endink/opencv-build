@@ -200,7 +200,7 @@ jobs:
         with:
           compression-level: 9
           retention-days: 1
-          name: ${{ env.ARCHIVE_NAME }}.zip
+          name: ${{ env.ARCHIVE_NAME }}
           path: ${{ env.OUTPUT_DIR }}/**/*
 
   release:
@@ -226,6 +226,7 @@ jobs:
         with:
           path: /tmp/artifact
           skip_unpack: true
+          search_artifacts: true
 
       - name: Display structure of downloaded files
         run: ls -R /tmp/artifact
