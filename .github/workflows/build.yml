@@ -190,9 +190,9 @@ jobs:
         if: ${{ env.BUILD_TARGET == 'all' || env.BUILD_TARGET == matrix.target }}
         run: ${{ matrix.build }}
 
-      # - name: Post build
-      #   if: ${{ env.BUILD_TARGET == 'all' || env.BUILD_TARGET == matrix.target }}
-      #   run: ${{ matrix.post-build }}
+      - name: Post build
+        if: ${{ env.BUILD_TARGET == 'all' || env.BUILD_TARGET == matrix.target }}
+        run: ${{ matrix.post-build }}
 
       - name: Upload artifact
         if: ${{ env.BUILD_TARGET == 'all' || env.BUILD_TARGET == matrix.target }}
@@ -220,14 +220,9 @@ jobs:
             echo "OPENCV_VERSION=${{ inputs.opencv-version }}" >> $GITHUB_ENV
             echo "Use OpenCV Version: ${{ inputs.opencv-version }}"
           fi
-
-      - name: Download artifacts
-        uses: dawidd6/action-download-artifact@v9
+      - uses: actions/download-artifact@v4
         with:
-          workflow: build.yml
           path: /tmp/artifact
-          skip_unpack: true
-          search_artifacts: true
 
       - name: Display structure of downloaded files
         run: ls -R /tmp/artifact
@@ -238,7 +233,7 @@ jobs:
         with:
           omitName: true
           body: "Official Release: [OpenCV v${{ env.OPENCV_VERSION }}](https://github.com/opencv/opencv/releases/tag/v${{ env.OPENCV_VERSION  }})"
-          artifacts: "/tmp/artifact/*.*"
+          artifacts: "/tmp/artifact/*/*.tgz,/tmp/artifact/*/*.zip"
           tag: "v${{ env.OPENCV_VERSION }}"
           allowUpdates: true
           omitNameDuringUpdate: true
