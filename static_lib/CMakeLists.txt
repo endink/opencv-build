@@ -3,7 +3,7 @@ project(opencv_static_lib)
 
 
 option(USE_MSVC_STATIC_RUNTIME "Use static crt or not" OFF)
-option(BUNDLE_LIB "bundle static libs" ON)
+option(BUNDLE_LIB "bundle static libs" OFF)
 
 set(BUILD_SHARED_LIBS OFF)
 set(BUILD_TESTS OFF)
@@ -82,17 +82,19 @@ endif()
 add_subdirectory(${OPENCV_SOURCE_DIR} opencv)
 
 
-# Bundle the static library
-include(bundle_static_library.cmake)
-bundle_static_library(${PROJECT_NAME} opencv_world)
-
+get_target_property(alias opencv_world ALIASED_TARGET)
 
 # Install the static library
 #install(
 #    FILES $<TARGET_PROPERTY:opencv_world,OPENCV_INCLUDE_INSTALL_PATH>
 #    TYPE INCLUDE
 #)
-if(BUNDLE_LIB)
+if(BUNDLE_LIB AND NOT BUILD_SHARED_LIBS)
+
+    # Bundle the static library
+    include(bundle_static_library.cmake)
+    bundle_static_library(${PROJECT_NAME} opencv_world)
+
     install(
         FILES ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}${PROJECT_NAME}${CMAKE_STATIC_LIBRARY_SUFFIX}
         RENAME ${CMAKE_STATIC_LIBRARY_PREFIX}opencv_bundled${CMAKE_STATIC_LIBRARY_SUFFIX}

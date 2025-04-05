@@ -2,7 +2,7 @@
 
 set -e
 SOURCE_DIR=${SOURCE_DIR:=static_lib}
-BUILD_DIR=${BUILD_DIR:=build/static_lib}
+BUILD_DIR=${BUILD_DIR:=build}
 OUTPUT_DIR=${OUTPUT_DIR:=output/static_lib}
 OPENCV_SOURCE_DIR=${OPENCV_SOURCE_DIR:=opencv}
 OPENCV_VERSION=${OPENCV_VERSION:=4.11.0}
