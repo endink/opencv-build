@@ -130,18 +130,18 @@ jobs:
       
       - name: Set environment variables
         run: |
-          echo OUTPUT_DIR=${{ env.GITHUB_WORKSPACE }}/output >> $GITHUB_ENV
+          echo OUTPUT_DIR=${GITHUB_WORKSPACE}/output >> $GITHUB_ENV
           echo ARCHIVE_DIR="${{ runner.temp }}" >> $GITHUB_ENV
           echo ARCHIVE_NAME=opencv-${{ matrix.target }}-${{ env.OPENCV_VERSION }} >> $GITHUB_ENV
-          echo Use Ouput Dir: ${{ env.GITHUB_WORKSPACE }}/output
+          echo Use Ouput Dir: ${GITHUB_WORKSPACE}/output
        
       - name: Setup Android environment
         if: startsWith(matrix.target, 'android')
         run: |
-          echo "ANDROID_HOME=${{ env.GITHUB_WORKSPACE }}/AndroidHome" >> $GITHUB_ENV
-          if [ ! -d "${{ env.GITHUB_WORKSPACE }}/AndroidHome" ];then
-            mkdir "${{ env.GITHUB_WORKSPACE }}/AndroidHome"
-            echo "Android Home: ${{ env.GITHUB_WORKSPACE }}/AndroidHome"
+          echo "ANDROID_HOME=${GITHUB_WORKSPACE}/AndroidHome" >> $GITHUB_ENV
+          if [ ! -d "${GITHUB_WORKSPACE}/AndroidHome" ];then
+            mkdir "${GITHUB_WORKSPACE}/AndroidHome"
+            echo "Android Home: ${GITHUB_WORKSPACE}/AndroidHome"
           fi
 
       - name: Checkout
