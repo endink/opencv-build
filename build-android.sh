@@ -51,6 +51,7 @@ ndk_api_level=21
 android_abi=("arm64-v8a")
 
 if [ "$GITHUB_ACTIONS" == "true" ]; then
+    echo "Build All ABI for android !"
     android_abi=("armeabi-v7a" "arm64-v8a" "x86" "x86_64")
 fi
 
