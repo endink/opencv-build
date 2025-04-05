@@ -214,10 +214,10 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
-          path: /tmp/artifact
+          path: ${{ env.GITHUB_WORKSPACE }}/artifact
 
       - name: Display structure of downloaded files
-        run: ls -R /tmp/artifact
+        run: ls -R ${{ env.GITHUB_WORKSPACE }}/artifact
         
       - name: Release
         if: ${{ env.IS_RELEASE == 'Yes' }}
@@ -225,7 +225,7 @@ jobs:
         with:
           omitName: true
           body: "Official Release: [OpenCV v${{ env.OPENCV_VERSION }}](https://github.com/opencv/opencv/releases/tag/v${{ env.OPENCV_VERSION  }})"
-          artifacts: "/tmp/artifact/*.*"
+          artifacts: "${{ env.GITHUB_WORKSPACE }}/artifact/*.*"
           tag: "v${{ env.OPENCV_VERSION }}"
           allowUpdates: true
           omitNameDuringUpdate: true
