@@ -128,10 +128,9 @@ do
     -DCV_ENABLE_INTRINSICS=ON -DWITH_EIGEN=ON -DWITH_PTHREADS=ON -DWITH_PTHREADS_PF=ON \
     -DWITH_JPEG=ON -DWITH_PNG=ON -DWITH_TIFF=ON \
     \
-    -DANDROID_NDK=${ndk_path} \
     -DCMAKE_TOOLCHAIN_FILE=${ndk_path}/build/cmake/android.toolchain.cmake \
+    -DANDROID_NDK=${ndk_path} \
     -DANDROID_PLATFORM="android-${ndk_api_level}" \
-    -DCMAKE_SYSTEM_VERSION=${ndk_api_level} \
     -DANDROID_ABI="${ABI}" \
     -DCMAKE_ANDROID_ARCH_ABI="${ABI}" \
     -DCMAKE_ANDROID_STL_TYPE=c++_static \
