@@ -140,9 +140,10 @@ jobs:
             echo "Android Home: $(pwd)/AndroidHome"
           fi
           android_string=${{ matrix.target }}
-          array=(${android_string//-/ }) 
-          echo "ANDROID_NDK_VERSION=$(array[2])" >> $GITHUB_ENV
-          echo "ANDROID_NDK_VERSION: $(array[2])"
+          array=(${android_string//-/ })
+          ndk_ver=array[2]
+          echo "ANDROID_NDK_VERSION=${ndk_ver}" >> $GITHUB_ENV
+          echo "ANDROID_NDK_VERSION: ${ndk_ver}"
 
       - name: Checkout
         if: ${{ env.BUILD_TARGET == 'all' || env.BUILD_TARGET == matrix.target }}
