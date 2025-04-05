@@ -224,6 +224,7 @@ jobs:
       - name: Download artifacts
         uses: dawidd6/action-download-artifact@v9
         with:
+          workflow: build.yml
           path: /tmp/artifact
           skip_unpack: true
           search_artifacts: true
