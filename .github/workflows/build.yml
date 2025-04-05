@@ -99,13 +99,13 @@ jobs:
           - target: android-ndk-r25b-shared
             runs-on: ubuntu-22.04
             build: >
-              ./setup_ndk.sh r25b && ./build-android.sh r25b shared
+              ./build-android.sh ${ANDROID_NDK_VERSION} shared
             post-build: tar -czvf $ARCHIVE_DIR/$ARCHIVE_NAME.tgz -C $OUTPUT_DIR .
 
           - target: android-ndk-r25b-static
             runs-on: ubuntu-22.04
             build: >
-              ./setup_ndk.sh r25b &&./build-android.sh r25b static
+              ./build-android.sh ${ANDROID_NDK_VERSION} static
             post-build: tar -czvf $ARCHIVE_DIR/$ARCHIVE_NAME.tgz -C $OUTPUT_DIR .
 
           # - target: wasm-static_lib-simd-threaded
@@ -131,7 +131,7 @@ jobs:
           echo ARCHIVE_NAME=opencv-${{ matrix.target }}-${{ env.OPENCV_VERSION }} >> $GITHUB_ENV
           echo Use Ouput Dir: $(pwd)/output
        
-      - name: Setup Android Home
+      - name: Setup Android environment
         if: startsWith(matrix.target, 'android')
         run: |
           echo "ANDROID_HOME=$(pwd)/AndroidHome" >> $GITHUB_ENV
@@ -139,6 +139,10 @@ jobs:
             mkdir "$(pwd)/AndroidHome"
             echo "Android Home: $(pwd)/AndroidHome"
           fi
+          android_string=${{ matrix.target }}
+          array=(${android_string//-/ }) 
+          echo "ANDROID_NDK_VERSION=$(array[2])" >> $GITHUB_ENV
+          echo "ANDROID_NDK_VERSION: $(array[2])"
 
       - name: Checkout
         if: ${{ env.BUILD_TARGET == 'all' || env.BUILD_TARGET == matrix.target }}
@@ -178,7 +182,10 @@ jobs:
         with:
           xcode-version: ${{ env.XCODE_VERSION }}
 
-          
+      - name: Setup NDK
+        if: startsWith(matrix.target, 'android')
+        run: |
+          ./setup_ndk.sh ${ANDROID_NDK_VERSION}
 
       - name: Build
         if: ${{ env.BUILD_TARGET == 'all' || env.BUILD_TARGET == matrix.target }}

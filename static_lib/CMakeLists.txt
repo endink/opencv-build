@@ -46,7 +46,7 @@ set(WITH_ITT OFF)
 set(WITH_PROTOBUF OFF)
 set(WITH_CUDA OFF)
 
-
+message(STATUS "BUILD_SHARED_LIBS: ${BUILD_SHARED_LIBS}")
 #set(OPENCV_INCLUDE_INSTALL_PATH "${CMAKE_INSTALL_PREFIX}/include")
 # Suppress C++23 deprecation warnings
 add_compile_definitions(_SILENCE_ALL_CXX23_DEPRECATION_WARNINGS)
