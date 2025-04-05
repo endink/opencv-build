@@ -20,11 +20,11 @@ on:
         - all
       release:
         description: "Modify Release"
-        default: No
+        default: "No"
         type: choice
         options:
-        - Yes
-        - No
+        - "Yes"
+        - "No"
       
   push:
     tags:
