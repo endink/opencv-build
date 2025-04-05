@@ -45,13 +45,6 @@ fi
 
 ndk_url="https://dl.google.com/android/repository/android-ndk-${ndk_version}-${platform}.zip"
 
-if [[ $ANDROID_HOME ]] && [[ $ANDROID_NDK_HOME ]]
-then
-  echo "Found existing \$ANDROID_HOME="$ANDROID_HOME" and \$ANDROID_NDK_HOME="$ANDROID_NDK_HOME
-  echo "Bazel will locate Android SDK and NDK automatically."
-  exit 0
-fi
-
 licenses="--accept-licenses"
 
 if [ -d "${android_sdk_path}/platforms/android-30" ]

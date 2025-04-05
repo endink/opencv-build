@@ -99,15 +99,13 @@ jobs:
           - target: android-ndk-r25b-shared
             runs-on: ubuntu-22.04
             build: >
-              ./setup_ndk.sh r25b
-              ./build-android.sh r25b shared
+              ./setup_ndk.sh r25b && ./build-android.sh r25b shared
             post-build: tar -czvf $ARCHIVE_DIR/$ARCHIVE_NAME.tgz -C $OUTPUT_DIR .
 
           - target: android-ndk-r25b-static
             runs-on: ubuntu-22.04
             build: >
-              ./setup_ndk.sh r25b
-              ./build-android.sh r25b static
+              ./setup_ndk.sh r25b &&./build-android.sh r25b static
             post-build: tar -czvf $ARCHIVE_DIR/$ARCHIVE_NAME.tgz -C $OUTPUT_DIR .
 
           # - target: wasm-static_lib-simd-threaded
