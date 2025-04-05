@@ -205,7 +205,6 @@ jobs:
 
   release:
     name: Release
-    if: ${{ ENV.IS_RELEASE == 'Yes' }}
     needs: build
     runs-on: ubuntu-22.04
     permissions:
@@ -216,6 +215,7 @@ jobs:
         uses: actions/download-artifact@v4
 
       - name: Release
+        if: ${{ env.IS_RELEASE == 'Yes' }}
         uses: ncipollo/release-action@v1
         with:
           omitName: true
