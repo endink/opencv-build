@@ -201,7 +201,7 @@ jobs:
           compression-level: 9
           retention-days: 1
           name: ${{ env.ARCHIVE_NAME }}
-          path: ${{ env.OUTPUT_DIR }}/**/*
+          path: ${{ env.ARCHIVE_DIR }}/${{ env.ARCHIVE_NAME }}.*
 
   release:
     name: Release
