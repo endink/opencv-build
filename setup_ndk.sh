@@ -59,7 +59,7 @@ else
       ${android_sdk_path}/cmdline-tools/bin/sdkmanager --update --sdk_root=${android_sdk_path}
       if [ "$licenses" == "--accept-licenses" ]
       then
-        yes | /tmp/android_sdk/cmdline-tools/bin/sdkmanager --licenses --sdk_root=${android_sdk_path}
+        yes | ${android_sdk_path}/cmdline-tools/bin/sdkmanager --licenses --sdk_root=${android_sdk_path}
       fi
   fi
   ${sdkmanager_file} "build-tools;30.0.3" "platform-tools" "platforms;android-30" "extras;android;m2repository" --sdk_root=${android_sdk_path}
