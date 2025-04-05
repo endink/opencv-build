@@ -101,7 +101,7 @@ jobs:
             prepare: > 
               ./setup_ndk.sh r25b
             build: >
-              ./build-android.sh ${ANDROID_NDK_VERSION} shared
+              ./build-android.sh r25b shared
             post-build: tar -czvf $ARCHIVE_DIR/$ARCHIVE_NAME.tgz -C $OUTPUT_DIR .
 
           - target: android-ndk-r25b-static
