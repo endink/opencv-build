@@ -21,14 +21,14 @@ ANDROID_HOME_DIR=${ANDROID_HOME:-/mnt/e/WSL_Data/AndroidSDK}
 #refer https://github.com/android/ndk/wiki/Unsupported-Downloads
 ndk_path=${ANDROID_HOME_DIR}/ndk/android-ndk-${ndk_version}
 
-if [ "${build_type}" = "shared" ];then
+if [ "${build_type}" == "shared" ];then
     build_shared_lib=ON
 fi
 
 output_dir=${OUTPUT_DIR}
 
 if [ -z "${output_dir}" ]; then
-    if [ "${build_shared_lib}" = "OFF" ]
+    if [ "${build_shared_lib}" == "OFF" ]
     then
         output_dir=/mnt/f/Works/Cpp/opencv-build/output/android-ndk-${ndk_version}-static
     else
@@ -50,9 +50,9 @@ fi
 ndk_api_level=21
 android_abi=("arm64-v8a")
 
-# if [ "$GITHUB_ACTIONS" == "true" ]; then
-#     android_abi=("armeabi-v7a" "arm64-v8a" "x86" "x86_64")
-# fi
+if [ "$GITHUB_ACTIONS" == "true" ]; then
+    android_abi=("armeabi-v7a" "arm64-v8a" "x86" "x86_64")
+fi
 
 
 
@@ -139,7 +139,7 @@ do
 
     cmake --install "${build_dir}" --config release
 
-    if [ "${build_shared_lib}" = "ON" ];then
+    if [ "${build_shared_lib}" == "ON" ];then
 
         lib_file=${output_dir}/sdk/native/libs/${android_abi}/libopencv_world.so
 
