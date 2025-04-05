@@ -56,10 +56,10 @@ else
   if [ ! -f "${sdkmanager_file}" ];then
       curl https://dl.google.com/android/repository/commandlinetools-${platform_android_sdk}-7583922_latest.zip -o /tmp/android_sdk/commandline_tools.zip
       unzip /tmp/android_sdk/commandline_tools.zip -d ${android_sdk_path}
-      ${android_sdk_path}/cmdline-tools/bin/sdkmanager --update --sdk_root=${android_sdk_path}
+      ${sdkmanager_file} --update --sdk_root=${android_sdk_path}
       if [ "$licenses" == "--accept-licenses" ]
       then
-        yes | ${android_sdk_path}/cmdline-tools/bin/sdkmanager --licenses --sdk_root=${android_sdk_path}
+        yes | ${sdkmanager_file} --licenses --sdk_root=${android_sdk_path}
       fi
   fi
   ${sdkmanager_file} "build-tools;30.0.3" "platform-tools" "platforms;android-30" "extras;android;m2repository" --sdk_root=${android_sdk_path}
