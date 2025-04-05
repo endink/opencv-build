@@ -98,14 +98,18 @@ jobs:
 
           - target: android-ndk-r25b-shared
             runs-on: ubuntu-22.04
+            prepare: > 
+              ./setup_ndk.sh r25b
             build: >
               ./build-android.sh ${ANDROID_NDK_VERSION} shared
             post-build: tar -czvf $ARCHIVE_DIR/$ARCHIVE_NAME.tgz -C $OUTPUT_DIR .
 
           - target: android-ndk-r25b-static
             runs-on: ubuntu-22.04
+            prepare: > 
+              ./setup_ndk.sh r25b
             build: >
-              ./build-android.sh ${ANDROID_NDK_VERSION} static
+              ./build-android.sh r25b static
             post-build: tar -czvf $ARCHIVE_DIR/$ARCHIVE_NAME.tgz -C $OUTPUT_DIR .
 
           # - target: wasm-static_lib-simd-threaded
@@ -139,10 +143,6 @@ jobs:
             mkdir "$(pwd)/AndroidHome"
             echo "Android Home: $(pwd)/AndroidHome"
           fi
-          android_string=${{ matrix.target }}
-          array=(${android_string//-/ })
-          echo "ANDROID_NDK_VERSION=${array[2]}" >> $GITHUB_ENV
-          echo "ANDROID_NDK_VERSION: ${array[2]}"
 
       - name: Checkout
         if: ${{ env.BUILD_TARGET == 'all' || env.BUILD_TARGET == matrix.target }}
@@ -184,23 +184,22 @@ jobs:
 
       - name: Setup Android NDK
         if: startsWith(matrix.target, 'android')
-        run: |
-          ./setup_ndk.sh ${ANDROID_NDK_VERSION}
+        run: ${{ matrix.prepare }}
 
       - name: Build
         if: ${{ env.BUILD_TARGET == 'all' || env.BUILD_TARGET == matrix.target }}
         run: ${{ matrix.build }}
 
-      - name: Post build
-        if: ${{ env.BUILD_TARGET == 'all' || env.BUILD_TARGET == matrix.target }}
-        run: ${{ matrix.post-build }}
+      # - name: Post build
+      #   if: ${{ env.BUILD_TARGET == 'all' || env.BUILD_TARGET == matrix.target }}
+      #   run: ${{ matrix.post-build }}
 
       - name: Upload artifact
         if: ${{ env.BUILD_TARGET == 'all' || env.BUILD_TARGET == matrix.target }}
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.ARCHIVE_NAME }}
-          path: ${{ env.ARCHIVE_DIR }}/${{ env.ARCHIVE_NAME }}.*
+          name: ${{ env.ARCHIVE_NAME }}.zip
+          path: ${{ env.OUTPUT_DIR }}/**/*
 
   release:
     name: Release
@@ -212,14 +211,19 @@ jobs:
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v4
+        with:
+          path: /tmp/artifact
 
+      - name: Display structure of downloaded files
+        run: ls -R $GITHUB_WORKSPACE/artifact
+        
       - name: Release
         if: ${{ env.IS_RELEASE == 'Yes' }}
         uses: ncipollo/release-action@v1
         with:
           omitName: true
           body: "Official Release: [OpenCV v${{ env.OPENCV_VERSION }}](https://github.com/opencv/opencv/releases/tag/v${{ env.OPENCV_VERSION  }})"
-          artifacts: "*/*.*"
+          artifacts: "/tmp/*.*"
           allowUpdates: true
           omitNameDuringUpdate: true
           omitBodyDuringUpdate: true
