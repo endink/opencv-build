@@ -183,7 +183,7 @@ jobs:
           xcode-version: ${{ env.XCODE_VERSION }}
 
       - name: Setup Android NDK
-        if: startsWith(matrix.target, 'android')
+        if: ${{ startsWith(matrix.target, 'android') && env.BUILD_TARGET == 'all' || env.BUILD_TARGET == matrix.target }} 
         run: ${{ matrix.prepare }}
 
       - name: Build

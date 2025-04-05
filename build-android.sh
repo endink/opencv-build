@@ -7,7 +7,6 @@ script_dir=$(cd $(dirname $0);pwd)
 ndk_version=${1:-r25b}
 build_type=${2:-static}
 
-
 build_shared_lib=OFF
 
 CMAKE_OPTIONS=$CMAKE_OPTIONS
@@ -56,7 +55,6 @@ android_abi=("arm64-v8a")
 # fi
 
 
-cd "${source_dir}"
 
 if [ -d "${build_dir}" ]
 then
