@@ -47,7 +47,7 @@ if [ ! -d "${output_dir}" ];then
 fi
 
 
-ndk_api_level=21
+ndk_api_level="21"
 android_abi=("arm64-v8a")
 
 if [ "$GITHUB_ACTIONS" == "true" ]; then
@@ -55,6 +55,10 @@ if [ "$GITHUB_ACTIONS" == "true" ]; then
     android_abi=("armeabi-v7a" "arm64-v8a" "x86" "x86_64")
 fi
 
+for ABI in "${android_abi[@]}"
+do
+echo "Build ${ABI} (android-${ndk_api_level})"
+done
 
 
 if [ -d "${build_dir}" ]
@@ -127,7 +131,7 @@ do
     \
     -DANDROID_NDK=${ndk_path} \
     -DCMAKE_TOOLCHAIN_FILE=${ndk_path}/build/cmake/android.toolchain.cmake \
-    -DANDROID_PLATFORM=android-${ndk_api_level} \
+    -DANDROID_PLATFORM="android-${ndk_api_level}" \
     -DANDROID_ABI=${ABI} \
     -DCMAKE_ANDROID_STL_TYPE=c++_static \
     \
