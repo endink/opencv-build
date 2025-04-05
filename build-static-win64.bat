@@ -1,4 +1,7 @@
 @echo off
+
+setlocal enabledelayedexpansion
+
 if "%OPENCV_VERSION%"=="" (
     set "OPENCV_VERSION=4.11.0"
 )
@@ -31,6 +34,13 @@ if "%CMAKE_OPTIONS%"=="" (
 set "CMAKE_OPTIONS=-DBUNDLE_LIB=ON"
 )
 
+call:get_core_num
+
+if "%core_num%" == "" (
+set core_num=8
+)
+
+
 @echo on
 cmake -S %SOURCE_DIR% ^
     -G "Visual Studio 17 2022" ^
@@ -46,7 +56,7 @@ cmake -S %SOURCE_DIR% ^
 
 cmake --build %BUILD_DIR% ^
     --config Release ^
-    --parallel 8 ^
+    --parallel %core_num% ^
     %CMAKE_BUILD_OPTIONS%
 
 cmake --install %BUILD_DIR% --config Release
@@ -62,6 +72,15 @@ echo build folder is null !!
 del /f /s /q "%~1\*.*"  >nul 2>&1
 rd /s /q  "%~1" >nul 2>&1
 )
+goto:eof
+
+:get_core_num
+set line=0
+for /f  %%a in ('wmic cpu get numberofcores') do (
+set /a line+=1
+if !line!==2 set A=%%a
+)
+set core_num=%A%
 goto:eof
 
 :failed

@@ -126,9 +126,10 @@ jobs:
       
       - name: Set environment variables
         run: |
-          echo OUTPUT_DIR=./output >> $GITHUB_ENV
+          echo OUTPUT_DIR=$(pwd)/output >> $GITHUB_ENV
           echo ARCHIVE_DIR="${{ runner.temp }}" >> $GITHUB_ENV
           echo ARCHIVE_NAME=opencv-${{ matrix.target }}-${{ env.OPENCV_VERSION }} >> $GITHUB_ENV
+          echo Use Ouput Dir: $(pwd)/output
        
       - name: Setup Android Home
         if: startsWith(matrix.target, 'android')
