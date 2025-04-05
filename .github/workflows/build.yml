@@ -130,18 +130,18 @@ jobs:
       
       - name: Set environment variables
         run: |
-          echo OUTPUT_DIR=$(pwd)/output >> $GITHUB_ENV
+          echo OUTPUT_DIR=${{ env.GITHUB_WORKSPACE }}/output >> $GITHUB_ENV
           echo ARCHIVE_DIR="${{ runner.temp }}" >> $GITHUB_ENV
           echo ARCHIVE_NAME=opencv-${{ matrix.target }}-${{ env.OPENCV_VERSION }} >> $GITHUB_ENV
-          echo Use Ouput Dir: $(pwd)/output
+          echo Use Ouput Dir: ${{ env.GITHUB_WORKSPACE }}/output
        
       - name: Setup Android environment
         if: startsWith(matrix.target, 'android')
         run: |
-          echo "ANDROID_HOME=$(pwd)/AndroidHome" >> $GITHUB_ENV
-          if [ ! -d "$(pwd)/AndroidHome" ];then
-            mkdir "$(pwd)/AndroidHome"
-            echo "Android Home: $(pwd)/AndroidHome"
+          echo "ANDROID_HOME=${{ env.GITHUB_WORKSPACE }}/AndroidHome" >> $GITHUB_ENV
+          if [ ! -d "${{ env.GITHUB_WORKSPACE }}/AndroidHome" ];then
+            mkdir "${{ env.GITHUB_WORKSPACE }}/AndroidHome"
+            echo "Android Home: ${{ env.GITHUB_WORKSPACE }}/AndroidHome"
           fi
 
       - name: Checkout
@@ -198,6 +198,8 @@ jobs:
         if: ${{ env.BUILD_TARGET == 'all' || env.BUILD_TARGET == matrix.target }}
         uses: actions/upload-artifact@v4
         with:
+          compression-level: 9
+          retention-days: 1
           name: ${{ env.ARCHIVE_NAME }}.zip
           path: ${{ env.OUTPUT_DIR }}/**/*
 

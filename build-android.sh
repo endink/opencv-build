@@ -139,7 +139,7 @@ do
 
     cmake --install "${build_dir}" --config release
 
-    if [ "${build_shared_lib}"=="ON" ];then
+    if [ "${build_shared_lib}" = "ON" ];then
 
         lib_file=${output_dir}/sdk/native/libs/${android_abi}/libopencv_world.so
 
