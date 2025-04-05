@@ -182,7 +182,7 @@ jobs:
         with:
           xcode-version: ${{ env.XCODE_VERSION }}
 
-      - name: Setup NDK
+      - name: Setup Android NDK
         if: startsWith(matrix.target, 'android')
         run: |
           ./setup_ndk.sh ${ANDROID_NDK_VERSION}
