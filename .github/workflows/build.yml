@@ -166,7 +166,7 @@ jobs:
       #     arch: x64
 
       - name: Setup GCC
-        if: runner.os == 'Linux'
+        if: ${{ runner.os == 'Linux' && !startsWith(matrix.target, 'android') }}
         uses: egor-tensin/setup-gcc@v1
         with:
           version: ${{ env.GCC_VERSION }}
@@ -220,7 +220,7 @@ jobs:
             echo "OPENCV_VERSION=${{ inputs.opencv-version }}" >> $GITHUB_ENV
             echo "Use OpenCV Version: ${{ inputs.opencv-version }}"
           fi
-          
+
       - name: Download artifacts
         uses: dawidd6/action-download-artifact@v9
         with:
