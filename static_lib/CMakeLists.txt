@@ -92,8 +92,8 @@ get_target_property(alias opencv_world ALIASED_TARGET)
 if(BUNDLE_LIB AND NOT BUILD_SHARED_LIBS)
 
     # Bundle the static library
-    include(bundle_static_library.cmake)
-    bundle_static_library(${PROJECT_NAME} opencv_world)
+    #include(bundle_static_library.cmake)
+    #bundle_static_library(${PROJECT_NAME} opencv_world)
 
     install(
         FILES ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}${PROJECT_NAME}${CMAKE_STATIC_LIBRARY_SUFFIX}
