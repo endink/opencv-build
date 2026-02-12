@@ -43,9 +43,6 @@ env:
   WIN_SDK_VERSION: 10.0.22621.0
   IS_RELEASE: ${{ inputs.release || 'Yes' }}
 
-defaults:
-  run:
-    shell: bash
 
 jobs:
   build:
