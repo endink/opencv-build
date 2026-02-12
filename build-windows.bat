@@ -37,9 +37,6 @@ if not exist "%OPENCV_SOURCE_DIR%" (
 
 )
 
-if "%CMAKE_OPTIONS%"=="" (
-set "CMAKE_OPTIONS=-D BUNDLE_LIB=OFF -T v143,version=%VC_VERSION%"
-)
 
 call:get_core_num
 
@@ -64,6 +61,7 @@ if exist %BUILD_DIR_WIN% (
 cmake -S %SOURCE_DIR% ^
     -G "%CMAKE_GENERATOR%" ^
     -A x64 ^
+    -t "v143,version=%VC_VERSION%"
     -B %BUILD_DIR% ^
     -D WITH_MSMF=OFF ^
     -D CMAKE_BUILD_TYPE=Release ^
@@ -82,7 +80,7 @@ cmake --build %BUILD_DIR% ^
 
 cmake --install %BUILD_DIR% --config Release
 
-exit /b 0
+exit /b 
 
 
 
