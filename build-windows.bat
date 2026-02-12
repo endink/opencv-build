@@ -61,7 +61,7 @@ if exist %BUILD_DIR_WIN% (
 cmake -S %SOURCE_DIR% ^
     -G "%CMAKE_GENERATOR%" ^
     -A x64 ^
-    -t "v143,version=%VC_VERSION%"
+    -T "v143,version=%VC_VERSION%" ^
     -B %BUILD_DIR% ^
     -D WITH_MSMF=OFF ^
     -D CMAKE_BUILD_TYPE=Release ^
