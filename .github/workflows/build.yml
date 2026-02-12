@@ -234,9 +234,8 @@ jobs:
 
       - name: Build
         if: ${{ steps.eval.outputs.enabled == 'true' }}
-        shell: ${{ matrix.shell || 'bash' }}
         run: ${{ matrix.build }}
-
+        
       - name: Post build
         if: ${{ steps.eval.outputs.enabled == 'true' }}
         run: ${{ matrix.post-build }}
