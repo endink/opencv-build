@@ -9,8 +9,9 @@ if "%OPENCV_VERSION%"=="" (
 set "WIN_SDK_VERSION=10.0.22621.0"
 set "VS_PATH=C:\Program Files\Microsoft Visual Studio\2022\Enterprise"
 
-if not defined CMAKE_GENERATOR set "CMAKE_GENERATOR=Visual Studio 17 2022"
+
 if not defined VC_VERSION set "VC_VERSION=14.38.33130"
+if not defined CMAKE_GENERATOR set "CMAKE_GENERATOR=Visual Studio 17 2022"
 
 pushd %~dp0
 set SCRIPT_DIR=%cd%
@@ -58,9 +59,13 @@ if exist %BUILD_DIR_WIN% (
     mkdir %BUILD_DIR_WIN%
 )
 
+echo %CMAKE_GENERATOR% | findstr /i "Visual Studio" >nul
+if %errorlevel%==0 (
+    set "CMAKE_OPTIONS=%CMAKE_OPTIONS% -A x64"
+)
+
 cmake -S %SOURCE_DIR% ^
     -G "%CMAKE_GENERATOR%" ^
-    -A x64 ^
     -T "v143,version=%VC_VERSION%" ^
     -B %BUILD_DIR% ^
     -D WITH_MSMF=OFF ^
