@@ -61,12 +61,11 @@ if exist %BUILD_DIR_WIN% (
 
 echo %CMAKE_GENERATOR% | findstr /i "Visual Studio" >nul
 if %errorlevel%==0 (
-    set "CMAKE_OPTIONS=%CMAKE_OPTIONS% -A x64"
+    set "CMAKE_OPTIONS=%CMAKE_OPTIONS% -A x64 -T "v143,version=%VC_VERSION%""
 )
 
 cmake -S %SOURCE_DIR% ^
     -G "%CMAKE_GENERATOR%" ^
-    -T "v143,version=%VC_VERSION%" ^
     -B %BUILD_DIR% ^
     -D WITH_MSMF=OFF ^
     -D CMAKE_BUILD_TYPE=Release ^
