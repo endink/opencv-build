@@ -86,13 +86,16 @@ jobs:
 
           - target: win-x64-static-md
             runs-on: windows-2022
+            shell: cmd
             build: >
-              CMAKE_OPTIONS='-A x64 -DUSE_MSVC_STATIC_RUNTIME=OFF -T v143,version=14.38.33130 '
-              ./build-windows.bat
+              set "CMAKE_OPTIONS=-A x64 -DUSE_MSVC_STATIC_RUNTIME=OFF -T v143,version=14.38.33130 "
+              set "CMAKE_GENERATOR=Ninja"
+              .\build-windows.bat
             post-build: 7z a $ARCHIVE_DIR/$ARCHIVE_NAME.zip $OUTPUT_DIR/*
 
           - target: win-x64-static-mt
             runs-on: windows-2022
+            shell: cmd
             build: >
               CMAKE_OPTIONS='-A x64 -DUSE_MSVC_STATIC_RUNTIME=ON -T v143,version=14.38.33130 '
               ./build-windows.bat
@@ -166,11 +169,20 @@ jobs:
         if: ${{ env.BUILD_TARGET == 'all' || env.BUILD_TARGET == matrix.target }}
         uses: actions/checkout@v4
         
-      - name: Setup MSVC-KIT
-        if: runner.os == 'Windows'
+      - name: Install VS 17.8 Build Tools
         shell: pwsh
         run: |
-          curl -L -o msvc-kit.exe https://github.com/loonghao/msvc-kit/releases/download/v0.2.5/msvc-kit-0.2.5-x86_64-windows.exe
+          Invoke-WebRequest `
+            -Uri "https://download.visualstudio.microsoft.com/download/pr/5bebe58c-9308-4a5b-9696-b6f84e90a32e/b10fa177f8134e8f9f5655270357e360196c546dc83c6627d8577b2ad6760dec/vs_BuildTools.exe" `
+            -OutFile vs_buildtools.exe
+        
+          Start-Process -Wait -FilePath .\vs_buildtools.exe `
+            -ArgumentList "--quiet --wait --norestart --nocache `
+            --installPath C:\VS_BUILD `
+            --channelUri https://aka.ms/vs/17/release/channel `
+            --installChannelUri https://aka.ms/vs/17/release/channel `
+            --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 `
+            --includeRecommended"
           
       - name: Setup MSVC
         if: runner.os == 'Windows'
@@ -179,6 +191,7 @@ jobs:
           msvc-kit config --set-dir ${{ github.workspace }}\msvc-kit
           msvc-kit download --msvc-version 14.38.33130 --no-sdk --arch x64 --parallel-downloads 8
           msvc-kit setup --script --shell cmd > setup_vc.bat && setup_vc.bat
+          
 
       - name: Checkout OpenCV v${{ env.OPENCV_VERSION }}
         if: ${{ env.BUILD_TARGET == 'all' || env.BUILD_TARGET == matrix.target }}
