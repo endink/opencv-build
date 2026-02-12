@@ -82,8 +82,7 @@ cmake --build %BUILD_DIR% ^
 
 cmake --install %BUILD_DIR% --config Release
 
-pause
-exit
+exit /b 0
 
 
 
