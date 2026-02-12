@@ -259,7 +259,6 @@ jobs:
 
     steps:
       - name: Set OpenCV version
-        shell: bash
         run: |
           if [ "${{ github.event_name }}" == "push" ]; then
             echo "OPENCV_VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
@@ -273,13 +272,11 @@ jobs:
           path: /tmp/artifact
 
       - name: Display structure of downloaded files
-        shell: bash
         run: ls -R /tmp/artifact
         
       - name: Release
         if: ${{ env.IS_RELEASE == 'Yes' }}
         uses: ncipollo/release-action@v1
-        shell: bash
         with:
           omitName: true
           body: "Official Release: [OpenCV v${{ env.OPENCV_VERSION }}](https://github.com/opencv/opencv/releases/tag/v${{ env.OPENCV_VERSION  }})"
