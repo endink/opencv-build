@@ -171,6 +171,7 @@ jobs:
        
       # https://learn.microsoft.com/zh-cn/visualstudio/releases/2022/release-history#release-dates-and-build-numbers 
       - name: Install VS 17.8 Build Tools
+        if: runner.os == 'Windows'
         shell: pwsh
         run: |
           Invoke-WebRequest `
