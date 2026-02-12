@@ -87,9 +87,10 @@ jobs:
           - target: win-x64-static-md
             runs-on: windows-2022
             shell: cmd
-            build: >
+            build: |
               set "CMAKE_OPTIONS=-A x64 -DUSE_MSVC_STATIC_RUNTIME=OFF -T v143,version=14.38.33130 "
               set "CMAKE_GENERATOR=Ninja"
+              call C:\VS_BUILD\Common7\Tools\VsDevCmd.bat -arch=x64 -host_arch=x64
               .\build-windows.bat
             post-build: 7z a $ARCHIVE_DIR/$ARCHIVE_NAME.zip $OUTPUT_DIR/*
 
@@ -182,6 +183,8 @@ jobs:
             --installChannelUri https://aka.ms/vs/17/release/channel `
             --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 `
             --includeRecommended"
+            
+          Test-Path "C:\VS_BUILD\Common7\Tools\VsDevCmd.bat"
           
       - name: Setup MSVC
         if: runner.os == 'Windows'
