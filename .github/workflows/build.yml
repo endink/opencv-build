@@ -287,7 +287,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           omitName: true
-          body: "Official Release: [OpenCV v${{ env.OPENCV_VERSION }}](https://github.com/opencv/opencv/releases/tag/v${{ env.OPENCV_VERSION  }})"
+          body: "Official Release: [OpenCV v${{ env.OPENCV_VERSION }}](https://github.com/opencv/opencv/releases/tag/${{ env.OPENCV_VERSION  }})"
           artifacts: "/tmp/artifact/*/*.tgz,/tmp/artifact/*/*.zip"
           tag: "v${{ env.OPENCV_VERSION }}"
           allowUpdates: true
