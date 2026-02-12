@@ -179,13 +179,16 @@ jobs:
         if: runner.os == 'Windows'
         uses: Cyberboss/install-winget@v1
 
-      - name: Setup MSVC
+      - name: Setup MSVC-KIT
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          winget install loonghao.msvc-kit 
-          $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
-          msvc-kit config --set-dir ${{ github.workspace }}/msvc-kit
+          winget install loonghao.msvc-kit
+          
+      - name: Setup MSVC-KIT
+        if: runner.os == 'Windows'
+        run: |
+          msvc-kit config --set-dir ${{ github.workspace }}\msvc-kit
           msvc-kit download --msvc-version 14.38.33130 --no-sdk --arch x64 --host-arch x64 --parallel-downloads 8
           msvc-kit setup --script --shell cmd > setup_vc.bat && setup_vc.bat
           
