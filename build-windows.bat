@@ -7,12 +7,17 @@ if "%OPENCV_VERSION%"=="" (
 )
 
 set "WIN_SDK_VERSION=10.0.22621.0"
-set "VC_VERSION=14.38.33130"
 set "VS_PATH=C:\Program Files\Microsoft Visual Studio\2022\Enterprise"
+
+if not defined CMAKE_GENERATOR set "CMAKE_GENERATOR=Visual Studio 17 2022"
+if not defined VC_VERSION set "VC_VERSION=14.38.33130"
 
 pushd %~dp0
 set SCRIPT_DIR=%cd%
 echo Work Dir: %SCRIPT_DIR%
+echo Cmake Generator: %CMAKE_GENERATOR%
+echo VC version: %VC_VERSION%
+
 
 @rem cmake env
 
@@ -33,7 +38,7 @@ if not exist "%OPENCV_SOURCE_DIR%" (
 )
 
 if "%CMAKE_OPTIONS%"=="" (
-set "CMAKE_OPTIONS=-DBUNDLE_LIB=OFF"
+set "CMAKE_OPTIONS=-D BUNDLE_LIB=OFF -T v143,version=%VC_VERSION%"
 )
 
 call:get_core_num
@@ -57,8 +62,7 @@ if exist %BUILD_DIR_WIN% (
 )
 
 cmake -S %SOURCE_DIR% ^
-    -G "Visual Studio 17 2022" ^
-    -T "v143,version=%VC_VERSION%" ^
+    -G "%CMAKE_GENERATOR%" ^
     -A x64 ^
     -B %BUILD_DIR% ^
     -D WITH_MSMF=OFF ^
