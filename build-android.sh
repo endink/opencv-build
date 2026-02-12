@@ -4,9 +4,9 @@
 
 script_dir=$(cd $(dirname $0);pwd)
 
-ndk_version=${1:-r27d}
+ndk_version=${1:-r25b}
 build_type=${2:-static}
-ndk_api_level=${3:-29}
+ndk_api_level=${3:-21}
 android_abi=("arm64-v8a")
 
 build_shared_lib=OFF

@@ -61,6 +61,8 @@ set(WITH_CUDA OFF CACHE BOOL "OPENC OPTIONS")
 set(BUILD_opencv_apps OFF CACHE BOOL "OPENC OPTIONS")
 
 if(MSVC)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /utf-8")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /utf-8")
     if(USE_MSVC_STATIC_RUNTIME)
         message("------------------ Use Static MSVC CRT ------------------")
         set(BUILD_WITH_STATIC_CRT ON)
