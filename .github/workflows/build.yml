@@ -91,8 +91,8 @@ jobs:
               set "CMAKE_GENERATOR=Ninja"
               call C:\VS_BUILD\Common7\Tools\VsDevCmd.bat -arch=x64 -host_arch=x64
               echo Start Building ...
-              dir
               call "%GITHUB_WORKSPACE%\build-windows.bat"
+              tree "$OUTPUT_DIR" /F
             post-build: 7z a $ARCHIVE_DIR/$ARCHIVE_NAME.zip $OUTPUT_DIR/*
 
           - target: win-x64-static-mt
@@ -104,6 +104,7 @@ jobs:
               echo Start Building ...
               dir
               call "%GITHUB_WORKSPACE%\build-windows.bat"
+              tree "$OUTPUT_DIR" /F
             post-build: 7z a $ARCHIVE_DIR/$ARCHIVE_NAME.zip $OUTPUT_DIR/*
 
           - target: android-21-ndk-r25b-shared
