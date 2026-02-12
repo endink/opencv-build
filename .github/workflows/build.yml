@@ -175,17 +175,14 @@ jobs:
           ref: ${{ env.OPENCV_VERSION }}
           path: opencv
           
-      - name: Setup Winget
-        if: runner.os == 'Windows'
-        uses: Cyberboss/install-winget@v1
 
       - name: Setup MSVC-KIT
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          winget install loonghao.msvc-kit
+          curl -L -o msvc-kit.exe https://github.com/loonghao/msvc-kit/releases/download/v0.2.5/msvc-kit-0.2.5-x86_64-windows.exe
           
-      - name: Setup MSVC-KIT
+      - name: Setup MSVC
         if: runner.os == 'Windows'
         run: |
           msvc-kit config --set-dir ${{ github.workspace }}\msvc-kit
