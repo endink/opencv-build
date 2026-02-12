@@ -91,7 +91,8 @@ jobs:
               set "CMAKE_GENERATOR=Ninja"
               call C:\VS_BUILD\Common7\Tools\VsDevCmd.bat -arch=x64 -host_arch=x64
               echo Start Building ...
-              call build-windows.bat
+              dir
+              call "%GITHUB_WORKSPACE%\build-windows.bat"
             post-build: 7z a $ARCHIVE_DIR/$ARCHIVE_NAME.zip $OUTPUT_DIR/*
 
           - target: win-x64-static-mt
