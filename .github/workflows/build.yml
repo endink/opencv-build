@@ -137,6 +137,7 @@ jobs:
 
     steps:
       - name: Evaluate build enable
+        shell: bash
         id: eval
         run: echo "enabled=${{ env.BUILD_TARGET == 'all' || env.BUILD_TARGET == matrix.target }}" >> $GITHUB_OUTPUT
         
