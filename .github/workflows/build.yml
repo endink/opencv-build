@@ -194,6 +194,8 @@ jobs:
         
           call C:\VS_BUILD\Common7\Tools\VsDevCmd.bat -arch=x64 -host_arch=x64
           
+          cl
+          
           
 
       - name: Checkout OpenCV v${{ env.OPENCV_VERSION }}
