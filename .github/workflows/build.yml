@@ -86,7 +86,6 @@ jobs:
 
           - target: win-x64-static-md
             runs-on: windows-2022
-            shell: cmd
             build: |
               set "CMAKE_OPTIONS=-A x64 -DUSE_MSVC_STATIC_RUNTIME=OFF -T v143,version=14.38.33130 "
               set "CMAKE_GENERATOR=Ninja"
@@ -228,6 +227,7 @@ jobs:
 
       - name: Build
         if: ${{ env.BUILD_TARGET == 'all' || env.BUILD_TARGET == matrix.target }}
+        shell: ${{ runner.os == 'Windows' && 'cmd' || 'bash' }}
         run: ${{ matrix.build }}
 
       - name: Post build
