@@ -43,6 +43,9 @@ env:
   WIN_SDK_VERSION: 10.0.22621.0
   IS_RELEASE: ${{ inputs.release || 'Yes' }}
 
+defaults:
+  run:
+    shell: bash
 
 jobs:
   build:
@@ -83,7 +86,6 @@ jobs:
 
           - target: win-x64-static-md
             runs-on: windows-2022
-            shell: cmd
             build: |
               set "CMAKE_OPTIONS=-A x64 -DUSE_MSVC_STATIC_RUNTIME=OFF -T v143,version=14.38.33130 "
               set "CMAKE_GENERATOR=Ninja"
@@ -137,13 +139,11 @@ jobs:
 
     steps:
       - name: Evaluate build enable
-        shell: bash
         id: eval
         run: echo "enabled=${{ env.BUILD_TARGET == 'all' || env.BUILD_TARGET == matrix.target }}" >> $GITHUB_OUTPUT
         
       - name: Set OpenCV version
         if: ${{ steps.eval.outputs.enabled == 'true' }}
-        shell: bash
         run: |
           if [ "${{ github.event_name }}" == "push" ]; then
             echo "OPENCV_VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
@@ -155,7 +155,6 @@ jobs:
       
       - name: Set environment variables
         if: ${{ steps.eval.outputs.enabled == 'true' }}
-        shell: bash
         run: |
           echo OUTPUT_DIR=${GITHUB_WORKSPACE}/output >> $GITHUB_ENV
           echo ARCHIVE_DIR="${{ runner.temp }}" >> $GITHUB_ENV
@@ -164,7 +163,6 @@ jobs:
        
       - name: Setup Android environment
         if: ${{ startsWith(matrix.target, 'android') && steps.eval.outputs.enabled == 'true' }}
-        shell: bash
         run: |
           echo "ANDROID_HOME=${GITHUB_WORKSPACE}/AndroidHome" >> $GITHUB_ENV
           if [ ! -d "${GITHUB_WORKSPACE}/AndroidHome" ];then
@@ -232,9 +230,15 @@ jobs:
       - name: Setup Android NDK
         if: ${{ startsWith(matrix.target, 'android') && steps.eval.outputs.enabled == 'true' }} 
         run: ${{ matrix.prepare }}
-
-      - name: Build
-        if: ${{ steps.eval.outputs.enabled == 'true' }}
+        
+      - name: Build (Windows)
+        if: ${{ runner.os == 'Windows' && steps.eval.outputs.enabled == 'true' }}
+        shell: cmd
+        run: ${{ matrix.build }}
+      
+      - name: Build (Linux)
+        if: ${{ runner.os != 'Windows' && steps.eval.outputs.enabled == 'true' }}
+        shell: bash
         run: ${{ matrix.build }}
         
       - name: Post build
