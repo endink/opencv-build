@@ -186,7 +186,7 @@ jobs:
             --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 `
             --includeRecommended"
             
-          Test-Path "C:\VS_BUILD\Common7\Tools\VsDevCmd.bat"
+          cmd /c "tree C:\VS_BUILD /F"
           
 
       - name: Checkout OpenCV v${{ env.OPENCV_VERSION }}
