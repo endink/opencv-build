@@ -190,8 +190,6 @@ jobs:
           start /wait vs_buildtools.exe ^
             --quiet --wait --norestart --nocache ^
             --installPath C:\VS_BUILD ^
-            --channelUri https://aka.ms/vs/17/release/channel ^
-            --installChannelUri https://aka.ms/vs/17/release/channel ^
             --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 ^
             --includeRecommended
         
