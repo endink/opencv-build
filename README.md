@@ -5,25 +5,28 @@ This project is to build [OpenCV](https://opencv.org/) libraries which are not p
 
 ### Build Scripts
 
-Build for native:
+Build for linux:
 
 ```sh
 ./build-static_lib.sh
 ```
 
 
-Build for windows
+Build for windows (x64)
 
 ```cmd
-.\build-static-win64
+.\build-windows
 ```
 
 
 
 Build for android
 
+run `build-android [ndk-version] [static/shared] [android api level]`
+
 ```cmd
 export ANDROID_HOME=~/Android
 ./setup_ndk.sh r25b
-./build-android r25b static
+
+./build-android.sh r25b static 21
 ```
