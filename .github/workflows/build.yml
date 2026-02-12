@@ -95,7 +95,6 @@ jobs:
 
           - target: win-x64-static-mt
             runs-on: windows-2022
-            shell: cmd
             build: >
               CMAKE_OPTIONS='-A x64 -DUSE_MSVC_STATIC_RUNTIME=ON -T v143,version=14.38.33130 '
               ./build-windows.bat
