@@ -87,47 +87,47 @@ jobs:
           - target: win-x64-static-md
             runs-on: windows-2022
             build: >
-              CMAKE_OPTIONS='-A x64 -DUSE_MSVC_STATIC_RUNTIME=OFF -T v142 '
+              CMAKE_OPTIONS='-A x64 -DUSE_MSVC_STATIC_RUNTIME=OFF -T v143,version=14.38.33130 '
               ./build-static_lib.sh
             post-build: 7z a $ARCHIVE_DIR/$ARCHIVE_NAME.zip $OUTPUT_DIR/*
 
           - target: win-x64-static-mt
             runs-on: windows-2022
             build: >
-              CMAKE_OPTIONS='-A x64 -DUSE_MSVC_STATIC_RUNTIME=ON -T v142 '
+              CMAKE_OPTIONS='-A x64 -DUSE_MSVC_STATIC_RUNTIME=ON -T -T v143,version=14.38.33130 '
               ./build-static_lib.sh
             post-build: 7z a $ARCHIVE_DIR/$ARCHIVE_NAME.zip $OUTPUT_DIR/*
 
           - target: android-21-ndk-r25b-shared
             runs-on: ubuntu-22.04
             prepare: > 
-              ./setup_ndk.sh r25b 21
+              ./setup_ndk.sh r25b
             build: >
-              ./build-android.sh r25b shared
+              ./build-android.sh r25b shared 21
             post-build: tar -czvf $ARCHIVE_DIR/$ARCHIVE_NAME.tgz -C $OUTPUT_DIR .
 
           - target: android-21-ndk-r25b-static
             runs-on: ubuntu-22.04
             prepare: > 
-              ./setup_ndk.sh r25b 21
+              ./setup_ndk.sh r25b
             build: >
-              ./build-android.sh r25b static
+              ./build-android.sh r25b static 21
             post-build: tar -czvf $ARCHIVE_DIR/$ARCHIVE_NAME.tgz -C $OUTPUT_DIR .
             
           - target: android-29-ndk-r27d-shared
             runs-on: ubuntu-22.04
             prepare: > 
-              ./setup_ndk.sh r27d 29
+              ./setup_ndk.sh r27d
             build: >
-              ./build-android.sh r25b shared
+              ./build-android.sh r27d shared 29
             post-build: tar -czvf $ARCHIVE_DIR/$ARCHIVE_NAME.tgz -C $OUTPUT_DIR .
 
           - target: android-29-ndk-r27d-static
             runs-on: ubuntu-22.04
             prepare: > 
-              ./setup_ndk.sh r27d 29
+              ./setup_ndk.sh r27d
             build: >
-              ./build-android.sh r25b static
+              ./build-android.sh r27d static 29
             post-build: tar -czvf $ARCHIVE_DIR/$ARCHIVE_NAME.tgz -C $OUTPUT_DIR .
 
           # - target: wasm-static_lib-simd-threaded

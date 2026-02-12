@@ -155,8 +155,7 @@ do
         fi
 
     fi
+    
+    echo "Complete build android $ABI"
 
 done
-
-
-

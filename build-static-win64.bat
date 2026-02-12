@@ -61,6 +61,7 @@ cmake -S %SOURCE_DIR% ^
     -T "v143,version=%VC_VERSION%" ^
     -A x64 ^
     -B %BUILD_DIR% ^
+    -D WITH_MSMF=OFF ^
     -D CMAKE_BUILD_TYPE=Release ^
     -D CMAKE_CONFIGURATION_TYPES=Release ^
     -D CMAKE_INSTALL_PREFIX=%OUTPUT_DIR% ^
