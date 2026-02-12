@@ -7,20 +7,22 @@ if "%OPENCV_VERSION%"=="" (
 )
 
 set "WIN_SDK_VERSION=10.0.22621.0"
+set "VC_VERSION=14.38.33130"
+set "VS_PATH=C:\Program Files\Microsoft Visual Studio\2022\Enterprise"
 
 pushd %~dp0
 set SCRIPT_DIR=%cd%
 echo Work Dir: %SCRIPT_DIR%
 
 @rem cmake env
-set "OUTPUT_DIR=%SCRIPT_DIR%/output"
-set "ARCHIVE_DIR=%OUTPUT_DIR%/archive"
-set "ARCHIVE_NAME=opencv-win64-%OPENCV_VERSION%"
+
 
 set "SOURCE_DIR=%SCRIPT_DIR:\=/%/static_lib"
-set "BUILD_DIR=%SCRIPT_DIR:\=/%/build"
+set "BUILD_DIR=%SCRIPT_DIR:\=/%/build/win64_build"
 set "OUTPUT_DIR=%SCRIPT_DIR:\=/%/output/win64"
 set "OPENCV_SOURCE_DIR=%SCRIPT_DIR%/opencv"
+set "ARCHIVE_DIR=%OUTPUT_DIR%/archive"
+set "ARCHIVE_NAME=opencv-win64-%OPENCV_VERSION%"
 
 if not exist "%OPENCV_SOURCE_DIR%" (
 
@@ -31,7 +33,7 @@ if not exist "%OPENCV_SOURCE_DIR%" (
 )
 
 if "%CMAKE_OPTIONS%"=="" (
-set "CMAKE_OPTIONS=-DBUNDLE_LIB=ON"
+set "CMAKE_OPTIONS=-DBUNDLE_LIB=OFF"
 )
 
 call:get_core_num
@@ -40,10 +42,23 @@ if "%core_num%" == "" (
 set core_num=8
 )
 
+echo Initializing MSVC environment...
+call "%VS_PATH%\VC\Auxiliary\Build\vcvarsall.bat"  x86_amd64 %WIN_SDK_VERSION% -vcvars_ver=%VC_VERSION%
+if errorlevel 1 (
+    echo MSVC environment initialization failed.
+    exit /b 1
+)
 
 @echo on
+set "BUILD_DIR_WIN=%BUILD_DIR:/=\%"
+if exist %BUILD_DIR_WIN% (
+    rmdir /s /q %BUILD_DIR_WIN%
+    mkdir %BUILD_DIR_WIN%
+)
+
 cmake -S %SOURCE_DIR% ^
     -G "Visual Studio 17 2022" ^
+    -T "v143,version=%VC_VERSION%" ^
     -A x64 ^
     -B %BUILD_DIR% ^
     -D CMAKE_BUILD_TYPE=Release ^
@@ -51,6 +66,7 @@ cmake -S %SOURCE_DIR% ^
     -D CMAKE_INSTALL_PREFIX=%OUTPUT_DIR% ^
     -D OPENCV_SOURCE_DIR=%OPENCV_SOURCE_DIR% ^
     -D CMAKE_SYSTEM_VERSION=%WIN_SDK_VERSION% ^
+    -D WITH_UI=ON ^
     --compile-no-warning-as-error ^
     %CMAKE_OPTIONS%
 
@@ -65,14 +81,6 @@ pause
 exit
 
 
-:rm_rebuild_dir
-if "%~1"=="" (
-echo build folder is null !!
-) else (
-del /f /s /q "%~1\*.*"  >nul 2>&1
-rd /s /q  "%~1" >nul 2>&1
-)
-goto:eof
 
 :get_core_num
 set line=0

@@ -4,15 +4,17 @@
 
 script_dir=$(cd $(dirname $0);pwd)
 
-ndk_version=${1:-r25b}
+ndk_version=${1:-r27d}
 build_type=${2:-static}
+ndk_api_level=${3:-29}
+android_abi=("arm64-v8a")
 
 build_shared_lib=OFF
 
 CMAKE_OPTIONS=$CMAKE_OPTIONS
 CMAKE_BUILD_OPTIONS=$CMAKE_BUILD_OPTIONS
 source_dir="${script_dir}/static_lib"
-build_dir="${script_dir}/android_build"
+build_dir="${script_dir}/build/android_build"
 
 
 ANDROID_HOME_DIR=${ANDROID_HOME:-/mnt/e/WSL_Data/AndroidSDK}
@@ -30,9 +32,9 @@ output_dir=${OUTPUT_DIR}
 if [ -z "${output_dir}" ]; then
     if [ "${build_shared_lib}" == "OFF" ]
     then
-        output_dir=/mnt/f/Works/Cpp/opencv-build/output/android-ndk-${ndk_version}-static
+        output_dir=/mnt/f/Works/Cpp/opencv-build/output/android-${ndk_api_level}-ndk-${ndk_version}-static
     else
-        output_dir=/mnt/f/Works/Cpp/opencv-build/output/android-ndk-${ndk_version}-shared
+        output_dir=/mnt/f/Works/Cpp/opencv-build/output/android-${ndk_api_level}-ndk-${ndk_version}-shared
     fi
 fi
 
@@ -47,8 +49,6 @@ if [ ! -d "${output_dir}" ];then
 fi
 
 
-ndk_api_level="21"
-android_abi=("arm64-v8a")
 
 if [ "$GITHUB_ACTIONS" == "true" ]; then
     echo "Build All ABI for android !"
@@ -134,6 +134,7 @@ do
     -DANDROID_ABI="${ABI}" \
     -DCMAKE_ANDROID_ARCH_ABI="${ABI}" \
     -DCMAKE_ANDROID_STL_TYPE=c++_static \
+    -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=ON\
     \
     -DCMAKE_INSTALL_PREFIX=${output_dir} \
     $CMAKE_OPTIONS

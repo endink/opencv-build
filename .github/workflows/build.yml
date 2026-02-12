@@ -15,8 +15,10 @@ on:
         - win-x64-static-md
         - win-x64-static-mt
         - linux-x64-static
-        - android-ndk-r25b-static
-        - android-ndk-r25b-shared
+        - android-21-ndk-r25b-static
+        - android-21-ndk-r25b-shared
+        - android-29-ndk-r27d-static
+        - android-29-ndk-r27d-shared
         - all
       release:
         description: "Modify Release"
@@ -96,18 +98,34 @@ jobs:
               ./build-static_lib.sh
             post-build: 7z a $ARCHIVE_DIR/$ARCHIVE_NAME.zip $OUTPUT_DIR/*
 
-          - target: android-ndk-r25b-shared
+          - target: android-21-ndk-r25b-shared
             runs-on: ubuntu-22.04
             prepare: > 
-              ./setup_ndk.sh r25b
+              ./setup_ndk.sh r25b 21
             build: >
               ./build-android.sh r25b shared
             post-build: tar -czvf $ARCHIVE_DIR/$ARCHIVE_NAME.tgz -C $OUTPUT_DIR .
 
-          - target: android-ndk-r25b-static
+          - target: android-21-ndk-r25b-static
             runs-on: ubuntu-22.04
             prepare: > 
-              ./setup_ndk.sh r25b
+              ./setup_ndk.sh r25b 21
+            build: >
+              ./build-android.sh r25b static
+            post-build: tar -czvf $ARCHIVE_DIR/$ARCHIVE_NAME.tgz -C $OUTPUT_DIR .
+            
+          - target: android-29-ndk-r27d-shared
+            runs-on: ubuntu-22.04
+            prepare: > 
+              ./setup_ndk.sh r27d 29
+            build: >
+              ./build-android.sh r25b shared
+            post-build: tar -czvf $ARCHIVE_DIR/$ARCHIVE_NAME.tgz -C $OUTPUT_DIR .
+
+          - target: android-29-ndk-r27d-static
+            runs-on: ubuntu-22.04
+            prepare: > 
+              ./setup_ndk.sh r27d 29
             build: >
               ./build-android.sh r25b static
             post-build: tar -czvf $ARCHIVE_DIR/$ARCHIVE_NAME.tgz -C $OUTPUT_DIR .
