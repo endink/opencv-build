@@ -27,6 +27,7 @@ cd $(dirname $0)
 cmake \
     -S $SOURCE_DIR \
     -B $BUILD_DIR \
+    -D WITH_IPP=OFF \
     -D CMAKE_BUILD_TYPE=Release \
     -D CMAKE_CONFIGURATION_TYPES=Release \
     -D CMAKE_INSTALL_PREFIX=$OUTPUT_DIR \
