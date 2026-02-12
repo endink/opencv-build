@@ -165,17 +165,7 @@ jobs:
       - name: Checkout
         if: ${{ env.BUILD_TARGET == 'all' || env.BUILD_TARGET == matrix.target }}
         uses: actions/checkout@v4
-
-      - name: Checkout OpenCV v${{ env.OPENCV_VERSION }}
-        if: ${{ env.BUILD_TARGET == 'all' || env.BUILD_TARGET == matrix.target }}
-        uses: actions/checkout@v4
-        with:
-          repository: opencv/opencv
-          submodules: true
-          ref: ${{ env.OPENCV_VERSION }}
-          path: opencv
-          
-
+        
       - name: Setup MSVC-KIT
         if: runner.os == 'Windows'
         shell: pwsh
@@ -189,6 +179,15 @@ jobs:
           msvc-kit config --set-dir ${{ github.workspace }}\msvc-kit
           msvc-kit download --msvc-version 14.38.33130 --no-sdk --arch x64 --parallel-downloads 8
           msvc-kit setup --script --shell cmd > setup_vc.bat && setup_vc.bat
+
+      - name: Checkout OpenCV v${{ env.OPENCV_VERSION }}
+        if: ${{ env.BUILD_TARGET == 'all' || env.BUILD_TARGET == matrix.target }}
+        uses: actions/checkout@v4
+        with:
+          repository: opencv/opencv
+          submodules: true
+          ref: ${{ env.OPENCV_VERSION }}
+          path: opencv
           
 
       - name: Setup GCC
