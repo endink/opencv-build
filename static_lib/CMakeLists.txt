@@ -94,7 +94,7 @@ message(STATUS "BUILD_SHARED_LIBS: ${BUILD_SHARED_LIBS}")
 add_compile_definitions(_SILENCE_ALL_CXX23_DEPRECATION_WARNINGS)
 
 
-
+include_directories(${OPENCV_SOURCE_DIR}/modules/core/include)
 # Add source
 add_subdirectory(${OPENCV_SOURCE_DIR} opencv)
 

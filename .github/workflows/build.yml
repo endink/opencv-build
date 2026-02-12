@@ -97,9 +97,13 @@ jobs:
 
           - target: win-x64-static-mt
             runs-on: windows-2022
-            build: >
-              CMAKE_OPTIONS='-D USE_MSVC_STATIC_RUNTIME=ON -D BUILD_SHARED_LIBS=OFF '
-              ./build-windows.bat
+            build: |
+              set "CMAKE_OPTIONS=-D USE_MSVC_STATIC_RUNTIME=ON -D BUILD_SHARED_LIBS=OFF "
+              set "CMAKE_GENERATOR=Ninja"
+              call C:\VS_BUILD\Common7\Tools\VsDevCmd.bat -arch=x64 -host_arch=x64
+              echo Start Building ...
+              dir
+              call "%GITHUB_WORKSPACE%\build-windows.bat"
             post-build: 7z a $ARCHIVE_DIR/$ARCHIVE_NAME.zip $OUTPUT_DIR/*
 
           - target: android-21-ndk-r25b-shared
@@ -177,7 +181,7 @@ jobs:
         uses: actions/checkout@v4
        
       # https://learn.microsoft.com/zh-cn/visualstudio/releases/2022/release-history#release-dates-and-build-numbers 
-      - name: Install VS 17.8 Build Tools
+      - name: Install VS 17.8.6 Build Tools
         if: ${{ runner.os == 'Windows' && steps.eval.outputs.enabled == 'true' }}
         shell: cmd
         run: |

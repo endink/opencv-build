@@ -67,7 +67,6 @@ if %errorlevel%==0 (
 cmake -S %SOURCE_DIR% ^
     -G "%CMAKE_GENERATOR%" ^
     -B %BUILD_DIR% ^
-    -D WITH_MSMF=OFF ^
     -D CMAKE_BUILD_TYPE=Release ^
     -D CMAKE_CONFIGURATION_TYPES=Release ^
     -D CMAKE_INSTALL_PREFIX=%OUTPUT_DIR% ^
