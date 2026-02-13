@@ -85,6 +85,11 @@ do
     echo "Build ${ABI} (android-${ndk_api_level})"
     echo "........................................"
     
+    if [ -n "${build_dir}" ] && [ -d "${build_dir}" ]; then
+        echo "Clean build dir ..."
+        rm -rf "${build_dir}"
+    fi
+    
     cmake \
     -S "${source_dir}" \
     -B "${build_dir}" \
