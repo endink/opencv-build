@@ -2,12 +2,16 @@
 # Build Android
 #USE AGE: bash ./build_opecv_android.sh <ndk_version:r25b> <opencv source dir> <build dir> <build shared lib>
 
-script_dir=$(cd $(dirname $0);pwd)
-
+ANDROID_HOME_DIR=${ANDROID_HOME:-/mnt/e/WSL_Data/AndroidSDK}
+OPENCV_VERSION=${OPENCV_VERSION:-4.13.0}
 ndk_version=${1:-r25b}
 build_type=${2:-static}
 ndk_api_level=${3:-21}
 android_abi=("arm64-v8a")
+
+
+script_dir=$(cd $(dirname $0);pwd)
+
 
 build_shared_lib=OFF
 
@@ -15,12 +19,16 @@ CMAKE_OPTIONS=$CMAKE_OPTIONS
 CMAKE_BUILD_OPTIONS=$CMAKE_BUILD_OPTIONS
 source_dir="${script_dir}/static_lib"
 build_dir="${script_dir}/build/android_build"
+OPENCV_SOURCE_DIR=${script_dir}/opencv
 
 
-ANDROID_HOME_DIR=${ANDROID_HOME:-/mnt/e/WSL_Data/AndroidSDK}
+if [ ! -d "$OPENCV_SOURCE_DIR" ]; then
+    echo "Clone opencv ($OPENCV_VERSION) ..."
+    git clone -b "$OPENCV_VERSION" --depth=1 --recursive https://github.com/opencv/opencv.git || exit 1
+fi
 
-#ndk r21e
-#refer https://github.com/android/ndk/wiki/Unsupported-Downloads
+
+
 ndk_path=${ANDROID_HOME_DIR}/ndk/android-ndk-${ndk_version}
 
 if [ "${build_type}" == "shared" ];then
@@ -147,7 +155,7 @@ do
 
     if [ "${build_shared_lib}" == "ON" ];then
 
-        lib_file=${output_dir}/sdk/native/libs/${android_abi}/libopencv_world.so
+        lib_file=${output_dir}/libs/libopencv_world.so
 
         if [ -f ${lib_file} ];then
         ${ndk_path}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip ${lib_file}
