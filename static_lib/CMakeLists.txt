@@ -128,4 +128,6 @@ if(BUNDLE_LIB AND NOT BUILD_SHARED_LIBS)
         RENAME ${CMAKE_STATIC_LIBRARY_PREFIX}opencv_bundled${CMAKE_STATIC_LIBRARY_SUFFIX}
         TYPE LIB
     )
+else()
+    message(STATUS "No Bounded Lib Build")
 endif()
