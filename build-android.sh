@@ -150,8 +150,6 @@ do
     -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=ON\
     \
     -DCMAKE_INSTALL_PREFIX=${output_dir} \
-    -DCMAKE_INSTALL_LIBDIR="$output_dir/lib/$ANDROID_ABI" \
-    -DCMAKE_INSTALL_BINDIR="$output_dir/lib/$ANDROID_ABI" \
     $CMAKE_OPTIONS
 
     #-DOPENCV_EXTRA_MODULES_PATH=${opencv_contrib_dir}/modules \
